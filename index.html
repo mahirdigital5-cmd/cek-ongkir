@@ -77,9 +77,9 @@ Silakan masukkan kecamatan dan <br>
 kota dengan benar ya kak 😊
 </div>
 
-<input type="text" id="kecamatan" placeholder="Kecamatan">
+<input type="text" id="kecamatan" placeholder="Kecamatan" required>
 
-<input type="text" id="kota" placeholder="Kota">
+<input type="text" id="kota" placeholder="Kota" required>
 
 <button onclick="kirimWA()">Cek Ongkir</button>
 
@@ -89,11 +89,11 @@ kota dengan benar ya kak 😊
 
 function kirimWA(){
 
-var kec = document.getElementById("kecamatan").value;
-var kota = document.getElementById("kota").value;
+var kec = document.getElementById("kecamatan").value.trim();
+var kota = document.getElementById("kota").value.trim();
 
-if(kec == "" || kota == ""){
-alert("Silakan isi kecamatan dan kota dulu ya kak 😊");
+if(kec === "" || kota === ""){
+alert("Kecamatan dan Kota wajib diisi ya kak 😊");
 return;
 }
 
