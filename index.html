@@ -34,7 +34,6 @@ font-size:16px;
 color:#555;
 margin-bottom:20px;
 line-height:1.6;
-text-align:center;
 }
 
 input{
@@ -44,7 +43,6 @@ margin-top:12px;
 border:1px solid #ddd;
 border-radius:8px;
 font-size:16px;
-box-sizing:border-box;
 }
 
 button{
@@ -56,12 +54,7 @@ border:none;
 color:white;
 font-weight:bold;
 border-radius:8px;
-cursor:pointer;
 font-size:18px;
-}
-
-button:hover{
-background:#20b358;
 }
 
 </style>
@@ -77,30 +70,57 @@ Silakan masukkan kecamatan dan <br>
 kota dengan benar ya kak 😊
 </div>
 
-<input type="text" id="kecamatan" placeholder="Kecamatan" required>
+<input id="kecamatan" placeholder="Cari Kecamatan">
 
-<input type="text" id="kota" placeholder="Kota" required>
+<input id="kota" placeholder="Kota / Kabupaten" readonly>
 
 <button onclick="kirimWA()">Cek Ongkir</button>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+
 <script>
+
+let dataKecamatan = [];
+
+fetch("https://raw.githubusercontent.com/emsifa/api-wilayah-indonesia/master/dist/districts.json")
+.then(res => res.json())
+.then(data => {
+dataKecamatan = data;
+});
+
+document.getElementById("kecamatan").addEventListener("input", function(){
+
+let keyword = this.value.toLowerCase();
+
+let found = dataKecamatan.find(d => 
+d.name.toLowerCase() === keyword
+);
+
+if(found){
+
+document.getElementById("kota").value = found.regency_name;
+
+}
+
+});
 
 function kirimWA(){
 
-var kec = document.getElementById("kecamatan").value.trim();
-var kota = document.getElementById("kota").value.trim();
+let kec = document.getElementById("kecamatan").value.trim();
+let kota = document.getElementById("kota").value.trim();
 
 if(kec === "" || kota === ""){
-alert("Kecamatan dan Kota wajib diisi ya kak 😊");
+alert("Silakan pilih kecamatan yang valid ya kak 😊");
 return;
 }
 
-var pesan = "Kecamatan : " + kec + "%0A" +
-            "Kota : " + kota;
+let pesan = 
+"Kecamatan : " + kec + "%0A" +
+"Kota : " + kota;
 
-var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + pesan;
+let url = "https://api.whatsapp.com/send?phone=15558770694&text=" + pesan;
 
 window.location.href = url;
 
