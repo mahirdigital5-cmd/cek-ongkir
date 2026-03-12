@@ -97,9 +97,10 @@ alert("Silakan isi kecamatan dan kota dulu ya kak 😊");
 return;
 }
 
-var pesan = "total cod ke " + kec + ", " + kota + " adalah 25rb";
+var pesan = "Kecamatan : " + kec + "%0A" +
+            "Kota : " + kota;
 
-var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + encodeURIComponent(pesan);
+var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + pesan;
 
 window.location.href = url;
 
