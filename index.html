@@ -43,6 +43,7 @@ margin-top:12px;
 border:1px solid #ddd;
 border-radius:8px;
 font-size:16px;
+box-sizing:border-box;
 }
 
 button{
@@ -55,6 +56,27 @@ color:white;
 font-weight:bold;
 border-radius:8px;
 font-size:18px;
+}
+
+button:hover{
+background:#20b358;
+}
+
+.suggestion{
+border:1px solid #ddd;
+border-top:none;
+max-height:180px;
+overflow:auto;
+text-align:left;
+}
+
+.suggestion div{
+padding:10px;
+cursor:pointer;
+}
+
+.suggestion div:hover{
+background:#f0f0f0;
 }
 
 </style>
@@ -72,51 +94,71 @@ kota dengan benar ya kak 😊
 
 <input id="kecamatan" placeholder="Cari Kecamatan">
 
+<div id="suggestions" class="suggestion"></div>
+
 <input id="kota" placeholder="Kota / Kabupaten" readonly>
 
 <button onclick="kirimWA()">Cek Ongkir</button>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-
 <script>
 
-let dataKecamatan = [];
+let data = [];
 
 fetch("https://raw.githubusercontent.com/emsifa/api-wilayah-indonesia/master/dist/districts.json")
 .then(res => res.json())
-.then(data => {
-dataKecamatan = data;
+.then(json => {
+data = json;
 });
 
-document.getElementById("kecamatan").addEventListener("input", function(){
+const input = document.getElementById("kecamatan");
+const suggestions = document.getElementById("suggestions");
+
+input.addEventListener("input", function(){
 
 let keyword = this.value.toLowerCase();
+suggestions.innerHTML = "";
 
-let found = dataKecamatan.find(d => 
-d.name.toLowerCase() === keyword
-);
+if(keyword.length < 2) return;
 
-if(found){
+let results = data.filter(d =>
+d.name.toLowerCase().includes(keyword)
+).slice(0,8);
 
-document.getElementById("kota").value = found.regency_name;
+results.forEach(d => {
 
-}
+let div = document.createElement("div");
+
+div.textContent = d.name + " - " + d.regency_name;
+
+div.onclick = function(){
+
+input.value = d.name;
+
+document.getElementById("kota").value = d.regency_name;
+
+suggestions.innerHTML = "";
+
+};
+
+suggestions.appendChild(div);
+
+});
 
 });
 
 function kirimWA(){
 
-let kec = document.getElementById("kecamatan").value.trim();
-let kota = document.getElementById("kota").value.trim();
+let kec = document.getElementById("kecamatan").value;
+let kota = document.getElementById("kota").value;
 
 if(kec === "" || kota === ""){
-alert("Silakan pilih kecamatan yang valid ya kak 😊");
+alert("Silakan pilih kecamatan dari daftar ya kak 😊");
 return;
 }
 
-let pesan = 
+let pesan =
 "Kecamatan : " + kec + "%0A" +
 "Kota : " + kota;
 
