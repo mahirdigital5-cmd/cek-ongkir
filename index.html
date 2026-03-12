@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Cek Ongkir COD</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
 body{
-font-family:Arial, sans-serif;
+font-family: Arial, sans-serif;
 background:#f5f5f5;
 display:flex;
 justify-content:center;
@@ -23,16 +24,16 @@ background:white;
 padding:30px;
 border-radius:14px;
 box-shadow:0 8px 20px rgba(0,0,0,0.08);
+text-align:center;
 width:100%;
 max-width:420px;
-text-align:center;
 }
 
 .info{
 font-size:16px;
 color:#555;
 margin-bottom:20px;
-line-height:1.5;
+line-height:1.6;
 }
 
 input{
@@ -54,33 +55,16 @@ border:none;
 color:white;
 font-weight:bold;
 border-radius:8px;
-font-size:18px;
 cursor:pointer;
+font-size:18px;
 }
 
 button:hover{
 background:#20b358;
 }
 
-.suggestion{
-border:1px solid #ddd;
-border-top:none;
-max-height:200px;
-overflow:auto;
-text-align:left;
-background:white;
-}
-
-.suggestion div{
-padding:10px;
-cursor:pointer;
-}
-
-.suggestion div:hover{
-background:#f2f2f2;
-}
-
 </style>
+
 </head>
 
 <body>
@@ -92,11 +76,9 @@ Silakan masukkan kecamatan dan <br>
 kota dengan benar ya kak 😊
 </div>
 
-<input id="kecamatan" placeholder="Cari Kecamatan">
+<input type="text" id="kecamatan" placeholder="Kecamatan">
 
-<div id="suggestions" class="suggestion"></div>
-
-<input id="kota" placeholder="Kota / Kabupaten" readonly>
+<input type="text" id="kota" placeholder="Kota / Kabupaten">
 
 <button onclick="kirimWA()">Cek Ongkir</button>
 
@@ -104,79 +86,23 @@ kota dengan benar ya kak 😊
 
 <script>
 
-let districts=[]
-let regencies=[]
-
-// ambil data kecamatan
-fetch("https://emsifa.github.io/api-wilayah-indonesia/api/districts.json")
-.then(res=>res.json())
-.then(data=>{
-districts=data
-})
-
-// ambil data kota
-fetch("https://emsifa.github.io/api-wilayah-indonesia/api/regencies.json")
-.then(res=>res.json())
-.then(data=>{
-regencies=data
-})
-
-const input=document.getElementById("kecamatan")
-const suggestions=document.getElementById("suggestions")
-
-input.addEventListener("input",function(){
-
-let keyword=this.value.toLowerCase()
-
-suggestions.innerHTML=""
-
-if(keyword.length<2) return
-
-let results=districts.filter(d=>
-d.name.toLowerCase().includes(keyword)
-).slice(0,8)
-
-results.forEach(d=>{
-
-let kota=regencies.find(r=>r.id===d.regency_id)
-
-let div=document.createElement("div")
-
-div.textContent=d.name+" - "+(kota?kota.name:"")
-
-div.onclick=function(){
-
-input.value=d.name
-
-document.getElementById("kota").value=kota?kota.name:""
-
-suggestions.innerHTML=""
-
-}
-
-suggestions.appendChild(div)
-
-})
-
-})
-
 function kirimWA(){
 
-let kec=document.getElementById("kecamatan").value
-let kota=document.getElementById("kota").value
+var kec = document.getElementById("kecamatan").value.trim();
+var kota = document.getElementById("kota").value.trim();
 
-if(kec==""||kota==""){
-alert("Silakan pilih kecamatan dari daftar ya kak 😊")
-return
+if(kec === "" || kota === ""){
+alert("Silakan isi kecamatan dan kota dulu ya kak 😊");
+return;
 }
 
-let pesan=
-"Kecamatan : "+kec+"%0A"+
-"Kota : "+kota
+var pesan =
+"Kecamatan : " + kec + "%0A" +
+"Kota : " + kota;
 
-let url="https://api.whatsapp.com/send?phone=15558770694&text="+pesan
+var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + encodeURIComponent(pesan);
 
-window.location.href=url
+window.location.href = url;
 
 }
 
