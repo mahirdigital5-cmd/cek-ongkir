@@ -9,7 +9,7 @@
 <style>
 
 body{
-font-family: Arial, sans-serif;
+font-family: Arial;
 background:#f5f5f5;
 display:flex;
 justify-content:center;
@@ -43,7 +43,6 @@ margin-top:12px;
 border:1px solid #ddd;
 border-radius:8px;
 font-size:16px;
-box-sizing:border-box;
 }
 
 button{
@@ -56,20 +55,14 @@ color:white;
 font-weight:bold;
 border-radius:8px;
 font-size:18px;
-cursor:pointer;
-}
-
-button:hover{
-background:#20b358;
 }
 
 .suggestion{
 border:1px solid #ddd;
 border-top:none;
 max-height:200px;
-overflow-y:auto;
+overflow:auto;
 text-align:left;
-background:white;
 }
 
 .suggestion div{
@@ -106,50 +99,69 @@ kota dengan benar ya kak 😊
 
 <script>
 
-let districts = [];
+const dataWilayah = [
 
-async function loadData(){
+{ kec:"Tenggarong", kota:"Kutai Kartanegara"},
+{ kec:"Loa Janan", kota:"Kutai Kartanegara"},
+{ kec:"Muara Jawa", kota:"Kutai Kartanegara"},
+{ kec:"Samarinda Ulu", kota:"Samarinda"},
+{ kec:"Samarinda Ilir", kota:"Samarinda"},
+{ kec:"Samarinda Seberang", kota:"Samarinda"},
+{ kec:"Balikpapan Selatan", kota:"Balikpapan"},
+{ kec:"Balikpapan Utara", kota:"Balikpapan"},
+{ kec:"Balikpapan Barat", kota:"Balikpapan"},
+{ kec:"Bontang Utara", kota:"Bontang"},
+{ kec:"Bontang Selatan", kota:"Bontang"},
 
-const res = await fetch("https://cdn.jsdelivr.net/gh/emsifa/api-wilayah-indonesia@master/dist/districts.json");
+{ kec:"Cakung", kota:"Jakarta Timur"},
+{ kec:"Tebet", kota:"Jakarta Selatan"},
+{ kec:"Kebayoran Baru", kota:"Jakarta Selatan"},
+{ kec:"Depok", kota:"Depok"},
+{ kec:"Beji", kota:"Depok"},
+{ kec:"Bogor Barat", kota:"Bogor"},
+{ kec:"Bogor Timur", kota:"Bogor"},
+{ kec:"Bandung Wetan", kota:"Bandung"},
+{ kec:"Cicendo", kota:"Bandung"},
+{ kec:"Coblong", kota:"Bandung"},
 
-districts = await res.json();
+{ kec:"Denpasar Barat", kota:"Denpasar"},
+{ kec:"Denpasar Selatan", kota:"Denpasar"},
+{ kec:"Denpasar Timur", kota:"Denpasar"}
 
-}
-
-loadData();
+];
 
 const input = document.getElementById("kecamatan");
 const suggestions = document.getElementById("suggestions");
 
 input.addEventListener("input", function(){
 
-const keyword = this.value.toLowerCase();
+let keyword = this.value.toLowerCase();
 
-suggestions.innerHTML = "";
+suggestions.innerHTML="";
 
 if(keyword.length < 2) return;
 
-const results = districts
-.filter(d => d.name.toLowerCase().includes(keyword))
-.slice(0,8);
+let results = dataWilayah.filter(w =>
+w.kec.toLowerCase().includes(keyword)
+);
 
-results.forEach(d => {
+results.slice(0,8).forEach(w => {
 
-const item = document.createElement("div");
+let div = document.createElement("div");
 
-item.textContent = d.name + " - " + d.regency_name;
+div.textContent = w.kec + " - " + w.kota;
 
-item.onclick = function(){
+div.onclick=function(){
 
-input.value = d.name;
+input.value = w.kec;
 
-document.getElementById("kota").value = d.regency_name;
+document.getElementById("kota").value = w.kota;
 
-suggestions.innerHTML = "";
+suggestions.innerHTML="";
 
-};
+}
 
-suggestions.appendChild(item);
+suggestions.appendChild(div);
 
 });
 
@@ -157,21 +169,21 @@ suggestions.appendChild(item);
 
 function kirimWA(){
 
-const kec = document.getElementById("kecamatan").value;
-const kota = document.getElementById("kota").value;
+let kec = document.getElementById("kecamatan").value;
+let kota = document.getElementById("kota").value;
 
-if(kec === "" || kota === ""){
+if(kec=="" || kota==""){
 alert("Silakan pilih kecamatan dari daftar ya kak 😊");
 return;
 }
 
-const pesan =
+let pesan =
 "Kecamatan : " + kec + "%0A" +
 "Kota : " + kota;
 
-const url = "https://api.whatsapp.com/send?phone=15558770694&text=" + pesan;
+let url="https://api.whatsapp.com/send?phone=15558770694&text="+pesan;
 
-window.location.href = url;
+window.location.href=url;
 
 }
 
