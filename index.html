@@ -97,10 +97,13 @@ return;
 }
 
 var pesan =
-"Kecamatan : " + kec + "%0A" +
-"Kota : " + kota;
+"Cek Ongkir%0A"+
+"---------------------%0A"+
+"---------------------%0A%0A"+
+"Kecamatan : " + kec + "%0A"+
+"Kota/Kabupaten : " + kota;
 
-var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + encodeURIComponent(pesan);
+var url = "https://api.whatsapp.com/send?phone=15558770694&text=" + pesan;
 
 window.location.href = url;
 
